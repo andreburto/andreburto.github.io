@@ -1,13 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Github Page</title>
-</head>
-<body>
-    <h1>andreburto.github.io</h1>
-    <p>This is a test page to see how GitHub works as a web host.</p>
-    <p><a href="https://github.com/andreburto/">My Repository</a></p>
-    <p><a href="http://andrewburton.biz/">My Website</a></p>
-    <p><a href="http://pastebin.com/u/andrewb">My Pastebin</a>, snippets and scraps</p>
-</body>
+	<head>
+        <meta charset="UTF-8">
+		<title>Andy's Links</title>
+		<script>
+
+mainLinks = [
+    ["AndrewBurton.biz", "http://andrewburton.biz/"],
+    ["LinkedIn", "https://www.linkedin.com/in/andrewburtondeveloper/"],
+    ["Github", "https://github.com/andreburto/"],
+    ["PasteBin", "https://pastebin.com/u/andrewb"],
+    ["Instagram", "https://www.instagram.com/syntoythesis/"]
+];
+
+function makeDiv(className) {
+    const elementName = "div";
+    const newDivCount = document.querySelectorAll(elementName+"."+className).length + 1;
+    const newDivId = className + newDivCount;
+    const newDiv = document.createElement(elementName);
+    newDiv.setAttribute("div-count", newDivCount);
+    newDiv.setAttribute("class", className);
+    newDiv.setAttribute("id", newDivId);
+    return newDiv
+}
+
+function makeOuterDiv() {
+    const className = "outerDiv";
+    const outerDiv = makeDiv(className);
+    return outerDiv
+}
+
+function makeInnerDiv() {
+    const className = "innerDiv";
+    const innerDiv = makeDiv(className);
+    return innerDiv
+}
+
+function resizeDivs(mainDoc) {
+    const outerSelector = "div.outerDiv";
+    const divHeight = Math.floor(mainDoc.clientHeight / mainDoc.querySelectorAll(outerSelector).length);
+    const divWidth = mainDoc.clientWidth;
+    mainDoc.querySelectorAll(outerSelector).forEach(function (el, index) {
+        const outerDivTop = divHeight * index;
+        el.style.height = divHeight + "px";
+        el.style.width = divWidth + "px";
+        el.style.top =  outerDivTop + "px";
+        el.style.left = "0px";
+
+        const innerSelector = "div.innerDiv";
+        el.querySelectorAll(innerSelector).forEach(function (innerEl, innerIndex) {
+            innerEl.style.top =  ((divHeight / 2) - (innerEl.clientHeight / 2)) + "px";
+            innerEl.style.left = ((divWidth / 2) - (innerEl.clientWidth / 2)) + "px";
+        });
+    });
+}
+
+function addSection(title, url) {
+	const outerDiv = makeOuterDiv();
+    const innerDiv = makeInnerDiv();
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("target", "_blank");
+    link.innerText = title;
+    innerDiv.appendChild(link);
+    outerDiv.appendChild(innerDiv);
+    document.body.appendChild(outerDiv);
+}
+
+function setupPage() {
+    mainLinks.forEach(function (item) {
+        addSection(item[0], item[1])
+    });
+    resizeDivs(document.documentElement);
+}
+		</script>
+		<style>
+body { margin: 0px; padding: 0px; background-color: #deedee; color: #000099; right: 0px; }
+div.outerDiv { magin: auto; text-align: center; position: absolute; padding: 0px; }
+div.innerDiv { margin: auto; text-align: center; position: absolute; border: #000099 1px solid; width: 75%; padding: 20px; }
+p { margin: auto; padding: 0px; }
+		</style>
+	</head>
+	<body onresize="resizeDivs(document.documentElement)" onload="setupPage();"></body>
 </html>
